@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-8h^eq-9xbssmnmw!*=j@@@0$a(4grc_$yy*4syyxw+@=_6s96m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -56,6 +56,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,9 +64,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
 ]
 
+APPEND_SLASH = False
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -73,9 +74,6 @@ CORS_ALLOWED_ORIGINS = [
      "http://192.168.108.23",
      "http://127.0.0.1:3000",  # Frontend URL
  ]
-ALLOWED_HOSTS = [
-    "*"
-]
 
 
 ROOT_URLCONF = 'RemoteMonitoringBackend.urls'

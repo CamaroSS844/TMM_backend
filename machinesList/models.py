@@ -12,8 +12,6 @@ class Mine(models.Model):
         return f"Mine name{self.name} - No. of Machines {self.total_number_of_machines}"
     
 class Machine(models.Model):
-
-
     name = models.CharField(max_length=255)
     machine_type = models.CharField(max_length=255)
     id_number = models.CharField(max_length=30, unique=True)
@@ -21,14 +19,13 @@ class Machine(models.Model):
     fleet_number = models.CharField(max_length=30)
     oem = models.CharField(max_length=255)
     year_of_manufacture = models.DateField()
-    #mine_information = models.ForeignKey(Mine, on_delete=models.CASCADE)
-    mine = models.CharField(max_length=50)
+    mine = models.ForeignKey(Mine, to_field='name', on_delete=models.CASCADE)
     last_seen = models.DateField()
     mileage = models.IntegerField()
     operating_hours = models.IntegerField()
     
     def __str__(self):
-        return f"Machine name: {self.name} - Mine: {self.mine.name} - Status: {self.status}"
+        return f"Machine name: {self.name} - Mine: {self.mine.name} - Fleet Number: {self.fleet_number}"
     
 class Operator(models.Model):
     name = models.CharField(max_length=255)
@@ -75,24 +72,13 @@ class opsum_per_shift(models.Model):
     engine_hours = models.IntegerField()
     transmission_hours = models.IntegerField()
 
-    
-    def __str__(self):
-        return f"Machine: {self.machine.name} - Date: {self.date} "
-class opsum_per_shift(models.Model):
-    mine = models.ForeignKey(Mine, on_delete=models.CASCADE)
-    shift_number = models.IntegerField()
-    machine = models.ForeignKey(Machine, on_delete=models.CASCADE, default=1)
-    operator = models.ForeignKey(Operator, on_delete=models.CASCADE, default=1)
-    date = models.DateField(default=2020-10-18)
-    distance_travelled = models.IntegerField()
-    tonnage = models.CharField(max_length=255)
-    fuel_consumed = models.IntegerField()
-    no_of_loads = models.IntegerField()
-    operating_hours = models.IntegerField()
-    idle_hours = models.IntegerField()
-    engine_hours = models.IntegerField()
-    transmission_hours = models.IntegerField()
-
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['date', 'shift_number', 'mine', 'machine'],
+                name='unique_machine_shift_date_mine_opsum'
+            )
+        ]
     
     def __str__(self):
         return f"Machine: {self.machine.name} - Date: {self.date} "
@@ -133,9 +119,12 @@ class sensor_data(models.Model):
     Brake_Cooling_Oil = models.IntegerField()
     Transmission_oil = models.IntegerField()
     
-    class Meta: 
+    class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["date", "shift_number", "mine"], name="unique_fields")
+            models.UniqueConstraint(
+                fields=['date', 'shift_number', 'mine', 'machine'],
+                name='unique_sensor_data'
+            )
         ]
     
     def __str__(self):
