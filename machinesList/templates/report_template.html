@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daily Performance Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        .summary-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 23%;
+        }
+        .card h3 {
+            margin: 0;
+            font-size: 24px;
+            color: #1a237e;
+        }
+        .card p {
+            margin: 5px 0;
+            color: #666;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th {
+            background: #4a148c;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        .section-title {
+            color: #1a237e;
+            margin: 30px 0 15px;
+        }
+        .comments {
+            margin-top: 30px;
+        }
+        .comments li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Daily Performance Report</h1>
+        <p>Generated at: {{ generated_at }}</p>
+    </div>
+
+    <div class="summary-cards">
+        <div class="card">
+            <h3>{{ total_active_machines }}</h3>
+            <p>Total Active Machines</p>
+        </div>
+        <div class="card">
+            <h3>{{ total_tonnage }} tons</h3>
+            <p>Total Tonnage (Today)</p>
+        </div>
+        <div class="card">
+            <h3>{{ total_fuel }} L</h3>
+            <p>Fuel Consumed (Today)</p>
+        </div>
+        <div class="card">
+            <h3>{{ active_violations }}</h3>
+            <p>Active Violations</p>
+        </div>
+    </div>
+
+    <h2 class="section-title">Vehicle Performance Comparison</h2>
+    <table>
+        <tr>
+            <th>M. ID</th>
+            <th>MILEAGE (KM)</th>
+            <th>TONNAGE (T)</th>
+            <th>FUEL CONSUMED (L)</th>
+            <th>VIOL</th>
+        </tr>
+        {% for item in performance_data %}
+        <tr>
+            <td>{{ item.machine_id }}</td>
+            <td>{{ item.mileage }}</td>
+            <td>{{ item.tonnage }}</td>
+            <td>{{ item.fuel_consumed }}</td>
+            <td>{{ item.violations|length }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2 class="section-title">Violations</h2>
+    <table>
+        <tr>
+            <th>M. ID</th>
+            <th>VIOLATIONS</th>
+            <th>DETAILS</th>
+        </tr>
+        {% for item in violations_data %}
+        <tr>
+            <td>{{ item.fleet_number }}</td>
+            <td>{{ item.violations|join:", " }}</td>
+            <td>{{ item.details|join:", " }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2 class="section-title">KPI Comparison</h2>
+    <table>
+        <tr>
+            <th>M. ID</th>
+            <th>UTILIZATION</th>
+            <th>AVAILABILITY</th>
+        </tr>
+        {% for item in kpi_data %}
+        <tr>
+            <td>{{ item.fleet_number }}</td>
+            <td>{{ item.utilization }}%</td>
+            <td>{{ item.availability }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="comments">
+        <h2 class="section-title">Additional Notes:</h2>
+        <ul>
+            {% for comment in comments %}
+            <li>{{ comment }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html> 
