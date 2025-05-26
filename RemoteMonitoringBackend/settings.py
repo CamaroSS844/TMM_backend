@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -107,6 +107,9 @@ DATABASES = {
     }
 }
 
+DATABASES['default'] = dj_database_url.parse(
+    "postgresql://minesight_database_user:VeL6rd7spo501tk2IK6MQ0DN8vdXjsHw@dpg-d0qc4n6mcj7s73dtl82g-a.oregon-postgres.render.com/minesight_database"
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
